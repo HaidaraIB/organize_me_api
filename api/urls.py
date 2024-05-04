@@ -3,10 +3,12 @@ from .views import (
     add_bill,
     get_bills,
     add_user,
+    login
 )
 
 urlpatterns = [
     path("addBill/<type>/", add_bill, name="add-bill"),
     path("getBills/<type>/<user_id>/", get_bills, name="get-bills"),
     path("addUser/", add_user, name="add-user"),
+    path("login/", login, name="login"),
 ]

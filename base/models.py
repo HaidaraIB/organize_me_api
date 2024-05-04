@@ -3,7 +3,9 @@ import time
 # Create your models here.
 
 class User(models.Model):
-    phone = models.TextField(unique=True)
+    email = models.EmailField(unique=True)
+    password = models.CharField(max_length=100, blank=False, null=False)
+    username = models.CharField(max_length=100, blank=False, null=False)
 
 
 class ElectricBill(models.Model):

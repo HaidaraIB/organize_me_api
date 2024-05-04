@@ -13,12 +13,12 @@ from .constants import BILL_TYPES, SERIALIZER_TYPES
 @api_view(["POST"])
 def add_user(request: Request):
 
-    is_user_exists = User.objects.filter(phone=request.data["phone"]).exists()
+    is_email_exists = User.objects.filter(email=request.data["email"]).exists()
 
-    if is_user_exists:
+    if is_email_exists:
         return Response(
             {
-                "message": "User already exists",
+                "message": "Email already exists",
             },
             status=status.HTTP_409_CONFLICT,
         )
@@ -34,7 +34,37 @@ def add_user(request: Request):
     else:
         return Response(
             {
-                "message": "Invalid phone",
+                "message": "Invalid email",
+            },
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+    
+
+@api_view(["POST"])
+def login(request: Request):
+
+    is_email_exists = User.objects.filter(email=request.data["email"]).exists()
+
+    if not is_email_exists:
+        return Response(
+            {
+                "message": "Email not found",
+            },
+            status=status.HTTP_404_NOT_FOUND,
+        )
+    
+    is_creds_valid = User.objects.filter(email=request.data["email"], password=request.data["password"])
+
+    if is_creds_valid:
+        return Response(
+            {
+                "message": "User logged in successfully",
+            }
+        )
+    else:
+        return Response(
+            {
+                "message": "Incorrect email or password",
             },
             status=status.HTTP_400_BAD_REQUEST,
         )

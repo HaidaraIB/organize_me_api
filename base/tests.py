@@ -8,7 +8,9 @@ class AddUserTestCase(TestCase):
         requests.post(
             url=f"{DOMAIN}/addUser/",
             data={
-                'phone':'11'
+                'email':'test@gmail.com',
+                'password': '12345',
+                'username': 'test'
             },
         )
 
