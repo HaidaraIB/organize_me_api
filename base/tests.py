@@ -13,6 +13,16 @@ class AddUserTestCase(TestCase):
                 'username': 'test'
             },
         )
+class LoginTestCase(TestCase):
+    def test_login(self):
+        r = requests.post(
+            url=f"{DOMAIN}/login/",
+            data={
+                'email':'test@gmail.com',
+                'password': '12345',
+            },
+        )
+        print(r.text)
 
 class AddBillTestCase(TestCase):
     def test_add_el_bill(self):
