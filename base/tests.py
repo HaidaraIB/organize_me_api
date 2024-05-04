@@ -2,11 +2,11 @@ from django.test import TestCase
 
 # Create your tests here.
 import requests
-
+DOMAIN = 'https://haidaraib.pythonanywhere.com'
 class AddUserTestCase(TestCase):
     def test_add_user(self):
         requests.post(
-            url="http://127.0.0.1:8000/addUser/",
+            url=f"{DOMAIN}/addUser/",
             data={
                 'phone':'11'
             },
@@ -15,7 +15,7 @@ class AddUserTestCase(TestCase):
 class AddBillTestCase(TestCase):
     def test_add_el_bill(self):
         requests.post(
-            url="http://127.0.0.1:8000/addBill/el/",
+            url=f"{DOMAIN}/addBill/el/",
             data={
                 "payment_amount": 10,
                 "commission_amount": 10,
@@ -33,7 +33,7 @@ class AddBillTestCase(TestCase):
 
     def test_add_wa_bill(self):
         requests.post(
-            url="http://127.0.0.1:8000/addBill/wa/",
+            url=f"{DOMAIN}/addBill/wa/",
             data={
                 "payment_amount": 10,
                 "commission_amount": 10,
@@ -50,7 +50,7 @@ class AddBillTestCase(TestCase):
     
     def test_add_tel_bill(self):
         requests.post(
-            url="http://127.0.0.1:8000/addBill/tel/",
+            url=f"{DOMAIN}/addBill/tel/",
             data={
                 "payment_amount": 10,
                 "commission_amount": 10,
@@ -68,27 +68,27 @@ class AddBillTestCase(TestCase):
 class GetBillsTestCase(TestCase):
     def test_get_el_bills(self):
         requests.get(
-            url="http://127.0.0.1:8000/getBills/el/19/",
+            url=f"{DOMAIN}/getBills/el/19/",
         )
 
         requests.get(
-            url="http://127.0.0.1:8000/getBills/el/1/",
+            url=f"{DOMAIN}/getBills/el/1/",
         )
 
     def test_get_wa_bills(self):
         requests.get(
-            url="http://127.0.0.1:8000/getBills/wa/19/",
+            url=f"{DOMAIN}/getBills/wa/19/",
         )
 
         requests.get(
-            url="http://127.0.0.1:8000/getBills/wa/1/",
+            url=f"{DOMAIN}/getBills/wa/1/",
         )
 
     def test_get_tel_bills(self):
         requests.get(
-            url="http://127.0.0.1:8000/getBills/tel/19/",
+            url=f"{DOMAIN}/getBills/tel/19/",
         )
 
         requests.get(
-            url="http://127.0.0.1:8000/getBills/tel/1/",
+            url=f"{DOMAIN}/getBills/tel/1/",
         )
