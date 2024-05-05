@@ -3,8 +3,8 @@ from django.test import TestCase
 # Create your tests here.
 import requests
 
-DOMAIN = "http://127.0.0.1:8000/"
-# DOMAIN = "https://haidaraib.pythonanywhere.com"
+# DOMAIN = "http://127.0.0.1:8000/"
+DOMAIN = "https://haidaraib.pythonanywhere.com"
 
 
 class AddUserTestCase(TestCase):
