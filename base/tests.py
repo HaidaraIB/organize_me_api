@@ -9,7 +9,7 @@ DOMAIN = "https://haidaraib.pythonanywhere.com"
 
 class AddUserTestCase(TestCase):
     def test_add_user(self):
-        requests.post(
+        r = requests.post(
             url=f"{DOMAIN}/addUser/",
             data={
                 "email": "test@gmail.com",
@@ -17,6 +17,7 @@ class AddUserTestCase(TestCase):
                 "username": "test",
             },
         )
+        print(f'AddUserTestCase {r.status_code}')
 
 
 class LoginTestCase(TestCase):
@@ -28,11 +29,12 @@ class LoginTestCase(TestCase):
                 "password": "12345",
             },
         )
+        print(f"LoginTestCase {r.status_code}")
 
 
 class AddBillTestCase(TestCase):
     def test_add_el_bill(self):
-        requests.post(
+        r = requests.post(
             url=f"{DOMAIN}/addBill/el/",
             data={
                 "payment_amount": 10,
@@ -48,9 +50,10 @@ class AddBillTestCase(TestCase):
                 "user": "1",
             },
         )
+        print(f'AddBillTestCase el {r.status_code}')
 
     def test_add_wa_bill(self):
-        requests.post(
+        r = requests.post(
             url=f"{DOMAIN}/addBill/wa/",
             data={
                 "payment_amount": 10,
@@ -66,9 +69,10 @@ class AddBillTestCase(TestCase):
                 "user": "1",
             },
         )
+        print(f'AddBillTestCase wa {r.status_code}')
 
     def test_add_tel_bill(self):
-        requests.post(
+        r = requests.post(
             url=f"{DOMAIN}/addBill/tel/",
             data={
                 "payment_amount": 10,
@@ -82,6 +86,7 @@ class AddBillTestCase(TestCase):
                 "user": "1",
             },
         )
+        print(f'AddBillTestCase tel {r.status_code}')
 
 
 class AddBillsTestCase(TestCase):
@@ -124,6 +129,7 @@ class AddBillsTestCase(TestCase):
                 },
             ],
         )
+        print(f'AddBillsTestCase tel {r.status_code}')
 
     def test_add_wa_bills(self):
         r = requests.post(
@@ -170,6 +176,7 @@ class AddBillsTestCase(TestCase):
                 },
             ],
         )
+        print(f'AddBillsTestCase wa {r.status_code}')
 
     def test_add_el_bills(self):
         r = requests.post(
@@ -216,32 +223,39 @@ class AddBillsTestCase(TestCase):
                 },
             ],
         )
+        print(f'AddBillsTestCase el {r.status_code}')
 
 
 class GetBillsTestCase(TestCase):
     def test_get_el_bills(self):
-        requests.get(
+        r = requests.get(
             url=f"{DOMAIN}/getBills/el/19/",
         )
+        print(f'GetBillsTestCase el {r.status_code}')
 
-        requests.get(
+        r = requests.get(
             url=f"{DOMAIN}/getBills/el/1/",
         )
+        print(f'GetBillsTestCase el {r.status_code}')
 
     def test_get_wa_bills(self):
-        requests.get(
+        r = requests.get(
             url=f"{DOMAIN}/getBills/wa/19/",
         )
+        print(f'GetBillsTestCase wa {r.status_code}')
 
-        requests.get(
+        r = requests.get(
             url=f"{DOMAIN}/getBills/wa/1/",
         )
+        print(f'GetBillsTestCase wa {r.status_code}')
 
     def test_get_tel_bills(self):
-        requests.get(
+        r = requests.get(
             url=f"{DOMAIN}/getBills/tel/19/",
         )
+        print(f'GetBillsTestCase tel {r.status_code}')
 
-        requests.get(
+        r = requests.get(
             url=f"{DOMAIN}/getBills/tel/1/",
         )
+        print(f'GetBillsTestCase tel {r.status_code}')
