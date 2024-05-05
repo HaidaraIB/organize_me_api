@@ -52,6 +52,5 @@ class TelecomBill(models.Model):
 
     phone_number_email = models.CharField(max_length=100, blank=False, null=False)
     invoice_number = models.CharField(max_length=100, blank=False, null=False)
-    subscription_number = models.CharField(max_length=100, blank=False, null=False)
     
-    user = models.ForeignKey(User, to_field='id', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, to_field="id", on_delete=models.CASCADE)

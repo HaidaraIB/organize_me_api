@@ -83,7 +83,27 @@ def add_bill(request: Request, type: str):
     else:
         return Response(
             {
-                "message": f"{serializer.errors}",
+                "message": f"Error {serializer.errors}",
+            },
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+    
+
+@api_view(["POST"])
+def add_bills(request: Request, type: str):
+    serializer: Serializer = SERIALIZER_TYPES[type](data=request.data, many=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(
+            {
+                "message": "Bills added successfully",
+            }
+        )
+    else:
+        print(serializer.errors)
+        return Response(
+            {
+                "message": f"Error {serializer.errors}",
             },
             status=status.HTTP_400_BAD_REQUEST,
         )
