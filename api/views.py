@@ -4,7 +4,12 @@ from rest_framework.decorators import api_view
 from rest_framework.serializers import Serializer
 from rest_framework import status
 
-from api.serializers import UserSerializer, ElectricBillSerializer, WaterBillSerializer, TelecomBillSerializer
+from api.serializers import (
+    UserSerializer,
+    ElectricBillSerializer,
+    WaterBillSerializer,
+    TelecomBillSerializer,
+)
 from base.models import User, ElectricBill, WaterBill, TelecomBill
 
 from .constants import BILL_TYPES, SERIALIZER_TYPES
@@ -38,7 +43,7 @@ def add_user(request: Request):
             },
             status=status.HTTP_400_BAD_REQUEST,
         )
-    
+
 
 @api_view(["POST"])
 def login(request: Request):
@@ -52,19 +57,21 @@ def login(request: Request):
             },
             status=status.HTTP_404_NOT_FOUND,
         )
-    
-    is_creds_valid = User.objects.filter(email=request.data["email"], password=request.data["password"])
+
+    is_creds_valid = User.objects.filter(
+        email=request.data["email"], password=request.data["password"]
+    )
 
     if is_creds_valid:
-        user_id = is_creds_valid.values()[0]['id']
+        user = is_creds_valid.values()[0]
 
-        el_bills = ElectricBill.objects.filter(user_id=user_id)
+        el_bills = ElectricBill.objects.filter(user_id=user["id"])
         el_bills_serializer = ElectricBillSerializer(el_bills, many=True)
 
-        wa_bills = WaterBill.objects.filter(user_id=user_id)
+        wa_bills = WaterBill.objects.filter(user_id=user["id"])
         wa_bills_serializer = WaterBillSerializer(wa_bills, many=True)
 
-        tel_bills = TelecomBill.objects.filter(user_id=user_id)
+        tel_bills = TelecomBill.objects.filter(user_id=user["id"])
         tel_bills_serializer = TelecomBillSerializer(tel_bills, many=True)
 
         return Response(
@@ -72,7 +79,8 @@ def login(request: Request):
                 "message": "تم تسجيل الدخول بنجاح",
                 "el": el_bills_serializer.data,
                 "wa": wa_bills_serializer.data,
-                "tel": tel_bills_serializer.data
+                "tel": tel_bills_serializer.data,
+                "username": user["username"],
             }
         )
     else:
@@ -101,7 +109,7 @@ def add_bill(request: Request, type: str):
             },
             status=status.HTTP_400_BAD_REQUEST,
         )
-    
+
 
 @api_view(["POST"])
 def add_bills(request: Request, type: str):
