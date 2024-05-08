@@ -4,8 +4,8 @@ from rest_framework.decorators import api_view
 from rest_framework.serializers import Serializer
 from rest_framework import status
 
-from api.serializers import UserSerializer
-from base.models import User
+from api.serializers import UserSerializer, ElectricBillSerializer, WaterBillSerializer, TelecomBillSerializer
+from base.models import User, ElectricBill, WaterBill, TelecomBill
 
 from .constants import BILL_TYPES, SERIALIZER_TYPES
 
@@ -56,9 +56,23 @@ def login(request: Request):
     is_creds_valid = User.objects.filter(email=request.data["email"], password=request.data["password"])
 
     if is_creds_valid:
+        user_id = is_creds_valid.values()[0]['id']
+
+        el_bills = ElectricBill.objects.filter(user_id=user_id)
+        el_bills_serializer = ElectricBillSerializer(el_bills, many=True)
+
+        wa_bills = WaterBill.objects.filter(user_id=user_id)
+        wa_bills_serializer = WaterBillSerializer(wa_bills, many=True)
+
+        tel_bills = TelecomBill.objects.filter(user_id=user_id)
+        tel_bills_serializer = TelecomBillSerializer(tel_bills, many=True)
+
         return Response(
             {
-                "message": "User logged in successfully",
+                "message": "تم تسجيل الدخول بنجاح",
+                "el": el_bills_serializer.data,
+                "wa": wa_bills_serializer.data,
+                "tel": tel_bills_serializer.data
             }
         )
     else:
@@ -100,7 +114,6 @@ def add_bills(request: Request, type: str):
             }
         )
     else:
-        print(serializer.errors)
         return Response(
             {
                 "message": f"Error {serializer.errors}",

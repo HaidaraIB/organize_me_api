@@ -6,6 +6,9 @@ class User(models.Model):
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=100, blank=False, null=False)
     username = models.CharField(max_length=100, blank=False, null=False)
+    last_el_bill = models.IntegerField(default=1)
+    last_wa_bill = models.IntegerField(default=1)
+    last_tel_bill = models.IntegerField(default=1)
 
 
 class ElectricBill(models.Model):
