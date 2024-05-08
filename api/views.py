@@ -76,7 +76,7 @@ def login(request: Request):
 
         return Response(
             {
-                "message": "تم تسجيل الدخول بنجاح",
+                "message": "User logged in successfully",
                 "el": el_bills_serializer.data,
                 "wa": wa_bills_serializer.data,
                 "tel": tel_bills_serializer.data,
