@@ -34,6 +34,7 @@ def add_user(request: Request):
         return Response(
             {
                 "message": "User added successfully",
+                "me": serializer.data
             }
         )
     else:
@@ -44,6 +45,34 @@ def add_user(request: Request):
             status=status.HTTP_400_BAD_REQUEST,
         )
 
+
+@api_view(["POST"])
+def update_user_info(request: Request):
+
+    user = User.objects.get(id=request.data["id"])
+
+    serializer = UserSerializer(data=request.data, instance=user)
+    
+    if serializer.is_valid():
+        user.email = request.data['email']
+        user.password = request.data['password']
+        user.username = request.data['username']
+        user.save()
+    
+        return Response(
+            {
+                "message": "User updated successfully",
+            }
+        )
+    else:
+        print(serializer.instance)
+        return Response(
+            {
+                "message": "Invalid email",
+            },
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+    
 
 @api_view(["POST"])
 def login(request: Request):
