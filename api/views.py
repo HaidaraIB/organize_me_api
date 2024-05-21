@@ -31,7 +31,12 @@ def add_user(request: Request):
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
-        return Response({"message": "User added successfully", "me": serializer.data})
+        return Response(
+            {
+                "message": "User added successfully",
+                "me": serializer.data,
+            }
+        )
     else:
         return Response(
             {
@@ -171,4 +176,20 @@ def get_bills(_: Request, type: str, user_id: int):
         )
 
     serializer: Serializer = SERIALIZER_TYPES[type](bills, many=True)
+    return Response(serializer.data)
+
+
+@api_view(["GET"])
+def get_user(_: Request, user_id: int):
+    user = User.objects.filter(id=user_id)
+
+    if not user:
+        return Response(
+            {
+                "message": f"There's no user with an id: {user_id}",
+            },
+            status=status.HTTP_404_NOT_FOUND,
+        )
+
+    serializer: Serializer = UserSerializer(user)
     return Response(serializer.data)
