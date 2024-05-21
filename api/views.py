@@ -181,7 +181,7 @@ def get_bills(_: Request, type: str, user_id: int):
 
 @api_view(["GET"])
 def get_user(_: Request, user_id: int):
-    user = User.objects.filter(id=user_id)
+    user = User.objects.filter(id=user_id)[0]
     if not user:
         return Response(
             {
@@ -190,5 +190,5 @@ def get_user(_: Request, user_id: int):
             status=status.HTTP_404_NOT_FOUND,
         )
 
-    serializer: UserSerializer = UserSerializer(user, many=True)
+    serializer: UserSerializer = UserSerializer(user)
     return Response(serializer.data)
