@@ -31,12 +31,7 @@ def add_user(request: Request):
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
-        return Response(
-            {
-                "message": "User added successfully",
-                "me": serializer.data
-            }
-        )
+        return Response({"message": "User added successfully", "me": serializer.data})
     else:
         return Response(
             {
@@ -52,13 +47,13 @@ def update_user_info(request: Request):
     user = User.objects.get(id=request.data["id"])
 
     serializer = UserSerializer(data=request.data, instance=user)
-    
+
     if serializer.is_valid():
-        user.email = request.data['email']
-        user.password = request.data['password']
-        user.username = request.data['username']
+        user.email = request.data["email"]
+        user.password = request.data["password"]
+        user.username = request.data["username"]
         user.save()
-    
+
         return Response(
             {
                 "message": "User updated successfully",
@@ -72,7 +67,7 @@ def update_user_info(request: Request):
             },
             status=status.HTTP_400_BAD_REQUEST,
         )
-    
+
 
 @api_view(["POST"])
 def login(request: Request):
@@ -110,6 +105,10 @@ def login(request: Request):
                 "wa": wa_bills_serializer.data,
                 "tel": tel_bills_serializer.data,
                 "username": user["username"],
+                "id": user["id"],
+                "last_el_bill": user["last_el_bill"],
+                "last_wa_bill": user["last_wa_bill"],
+                "last_tel_bill": user["last_tel_bill"],
             }
         )
     else:
