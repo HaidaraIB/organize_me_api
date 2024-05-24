@@ -65,7 +65,6 @@ def update_user_info(request: Request):
             }
         )
     else:
-        print(serializer.instance)
         return Response(
             {
                 "message": "Invalid email",
