@@ -57,9 +57,6 @@ def update_user_info(request: Request):
         user.email = request.data["email"]
         user.password = request.data["password"]
         user.username = request.data["username"]
-        user.last_el_bill = request.data["last_el_bill"]
-        user.last_tel_bill = request.data["last_tel_bill"]
-        user.last_wa_bill = request.data["last_wa_bill"]
         user.save()
 
         return Response(
@@ -114,9 +111,6 @@ def login(request: Request):
                 "tel": tel_bills_serializer.data,
                 "username": user["username"],
                 "id": user["id"],
-                "last_el_bill": user["last_el_bill"],
-                "last_wa_bill": user["last_wa_bill"],
-                "last_tel_bill": user["last_tel_bill"],
             }
         )
     else:
