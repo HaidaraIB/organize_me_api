@@ -19,18 +19,18 @@ class Bill(models.Model):
     class Meta:
         abstract=True
 
-class ElectricBill(models.Model):
+class ElectricBill(Bill):
     gov = models.CharField(max_length=100, blank=False, null=False)
     billing_number = models.CharField(max_length=100, blank=False, null=False)
     invoice_number = models.CharField(max_length=100, blank=False, null=False)
     subscription_number = models.CharField(max_length=100, blank=False, null=False)
 
-class WaterBill(models.Model):
+class WaterBill(Bill):
     gov = models.CharField(max_length=100, blank=False, null=False)
     receipt_number = models.CharField(max_length=100, blank=False, null=False)
     barcode_number = models.CharField(max_length=100, blank=False, null=False)
     counter_number = models.CharField(max_length=100, blank=False, null=False)
 
-class TelecomBill(models.Model):
+class TelecomBill(Bill):
     phone_number_email = models.CharField(max_length=100, blank=False, null=False)
     invoice_number = models.CharField(max_length=100, blank=False, null=False)

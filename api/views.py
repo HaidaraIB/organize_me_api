@@ -75,31 +75,27 @@ def update_user_info(request: Request):
 
 @api_view(["POST"])
 def login(request: Request):
-
-    is_email_exists = User.objects.filter(email=request.data["email"]).exists()
-
-    if not is_email_exists:
+    try:
+        User.objects.get(email=request.data["email"])
+    except User.DoesNotExist:
         return Response(
             {
                 "message": "Email not found",
             },
             status=status.HTTP_404_NOT_FOUND,
         )
-
-    is_creds_valid = User.objects.filter(
+    user = User.objects.get(
         email=request.data["email"], password=request.data["password"]
     )
-
-    if is_creds_valid:
-        user = is_creds_valid.values()[0]
-
-        el_bills = ElectricBill.objects.filter(user_id=user["id"])
+    if user is not None:
+        user_serializer = UserSerializer(user)
+        el_bills = ElectricBill.objects.filter(user_id=user_serializer.data["id"])
         el_bills_serializer = ElectricBillSerializer(el_bills, many=True)
 
-        wa_bills = WaterBill.objects.filter(user_id=user["id"])
+        wa_bills = WaterBill.objects.filter(user_id=user_serializer.data["id"])
         wa_bills_serializer = WaterBillSerializer(wa_bills, many=True)
 
-        tel_bills = TelecomBill.objects.filter(user_id=user["id"])
+        tel_bills = TelecomBill.objects.filter(user_id=user_serializer.data["id"])
         tel_bills_serializer = TelecomBillSerializer(tel_bills, many=True)
 
         return Response(
@@ -108,14 +104,13 @@ def login(request: Request):
                 "el": el_bills_serializer.data,
                 "wa": wa_bills_serializer.data,
                 "tel": tel_bills_serializer.data,
-                "username": user["username"],
-                "id": user["id"],
+                "user": user_serializer.data,
             }
         )
     else:
         return Response(
             {
-                "message": "Incorrect email or password",
+                "message": "Icorrect password",
             },
             status=status.HTTP_400_BAD_REQUEST,
         )
