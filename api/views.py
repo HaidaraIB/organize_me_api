@@ -62,12 +62,13 @@ def update_user_info(request: Request):
         return Response(
             {
                 "message": "User updated successfully",
+                "user": serializer.data,
             }
         )
     else:
         return Response(
             {
-                "message": "Invalid email",
+                "message": str(serializer.errors),
             },
             status=status.HTTP_400_BAD_REQUEST,
         )
