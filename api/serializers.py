@@ -7,10 +7,23 @@ from base.models import (
     User,
 )
 
+from django.contrib.auth.hashers import make_password
+
 class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+
+    def validate_password(self, value):
+        hashed_password = make_password(value)
+        return hashed_password
+
     class Meta:
         model = User
         fields = "__all__"
+        
+class GetUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('email', 'username')
 
 
 class ElectricBillSerializer(serializers.ModelSerializer):

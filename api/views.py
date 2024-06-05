@@ -3,8 +3,10 @@ from rest_framework.request import Request
 from rest_framework.decorators import api_view
 from rest_framework.serializers import Serializer
 from rest_framework import status
+from django.contrib.auth.hashers import check_password
 
 from api.serializers import (
+    GetUserSerializer,
     UserSerializer,
     ElectricBillSerializer,
     WaterBillSerializer,
@@ -77,7 +79,7 @@ def update_user_info(request: Request):
 @api_view(["POST"])
 def login(request: Request):
     try:
-        User.objects.get(email=request.data["email"])
+        user = User.objects.get(email=request.data["email"])
     except User.DoesNotExist:
         return Response(
             {
@@ -85,10 +87,10 @@ def login(request: Request):
             },
             status=status.HTTP_404_NOT_FOUND,
         )
-    user = User.objects.get(
-        email=request.data["email"], password=request.data["password"]
-    )
-    if user is not None:
+    
+    is_password_correct = check_password(request.data['password'], user.password)
+    
+    if is_password_correct:
         user_serializer = UserSerializer(user)
         el_bills = ElectricBill.objects.filter(user_id=user_serializer.data["id"])
         el_bills_serializer = ElectricBillSerializer(el_bills, many=True)
@@ -182,5 +184,5 @@ def get_user(_: Request, user_id: int):
             status=status.HTTP_404_NOT_FOUND,
         )
 
-    serializer: UserSerializer = UserSerializer(user)
+    serializer: GetUserSerializer = GetUserSerializer(user)
     return Response(serializer.data)
