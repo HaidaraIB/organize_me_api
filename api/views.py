@@ -3,10 +3,9 @@ from rest_framework.request import Request
 from rest_framework.decorators import api_view
 from rest_framework.serializers import Serializer
 from rest_framework import status
-from django.contrib.auth.hashers import check_password
+from django.contrib.auth.hashers import check_password, make_password
 
 from api.serializers import (
-    GetUserSerializer,
     UserSerializer,
     ElectricBillSerializer,
     WaterBillSerializer,
@@ -57,7 +56,7 @@ def update_user_info(request: Request):
 
     if serializer.is_valid():
         user.email = request.data["email"]
-        user.password = request.data["password"]
+        user.password = make_password(request.data["password"])
         user.username = request.data["username"]
         user.save()
 
@@ -184,5 +183,5 @@ def get_user(_: Request, user_id: int):
             status=status.HTTP_404_NOT_FOUND,
         )
 
-    serializer: GetUserSerializer = GetUserSerializer(user)
+    serializer: UserSerializer = UserSerializer(user)
     return Response(serializer.data)
