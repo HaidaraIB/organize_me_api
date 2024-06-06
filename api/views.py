@@ -3,8 +3,7 @@ from rest_framework.request import Request
 from rest_framework.decorators import api_view
 from rest_framework.serializers import Serializer
 from rest_framework import status
-from django.contrib.auth.hashers import check_password, make_password
-from django.db.utils import IntegrityError
+from django.contrib.auth.hashers import check_password
 from api.serializers import (
     UserSerializer,
     ElectricBillSerializer,
@@ -18,17 +17,6 @@ from .constants import BILL_TYPES, SERIALIZER_TYPES
 
 @api_view(["POST"])
 def add_user(request: Request):
-
-    is_email_exists = User.objects.filter(email=request.data["email"]).exists()
-
-    if is_email_exists:
-        return Response(
-            {
-                "message": "Email already exists",
-            },
-            status=status.HTTP_409_CONFLICT,
-        )
-
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
@@ -39,9 +27,10 @@ def add_user(request: Request):
             }
         )
     else:
+        error_msg = serializer.errors.get("email")[0]
         return Response(
             {
-                "message": "Invalid email",
+                "message": error_msg,
             },
             status=status.HTTP_400_BAD_REQUEST,
         )
@@ -50,16 +39,14 @@ def add_user(request: Request):
 @api_view(["POST"])
 def update_user_info(request: Request):
 
-    user = User.objects.get(id=request.data["id"])
+    user = User.objects.get(id=request.data.get("id"))
 
     serializer = UserSerializer(data=request.data, instance=user)
 
     if serializer.is_valid():
-        user.email = request.data["email"]
-        user.password = make_password(request.data["password"])
-        user.username = request.data["username"]
-        user.save()
-
+        # .save() here will call .update(),
+        # because we're passing the User object as an instance to UserSerializer.
+        serializer.save()
         return Response(
             {
                 "message": "User updated successfully",
