@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.serializers import Serializer
 from rest_framework import status
 from django.contrib.auth.hashers import check_password, make_password
-
+from django.db.utils import IntegrityError
 from api.serializers import (
     UserSerializer,
     ElectricBillSerializer,
@@ -86,9 +86,9 @@ def login(request: Request):
             },
             status=status.HTTP_404_NOT_FOUND,
         )
-    
-    is_password_correct = check_password(request.data['password'], user.password)
-    
+
+    is_password_correct = check_password(request.data["password"], user.password)
+
     if is_password_correct:
         user_serializer = UserSerializer(user)
         el_bills = ElectricBill.objects.filter(user_id=user_serializer.data["id"])
@@ -113,25 +113,6 @@ def login(request: Request):
         return Response(
             {
                 "message": "Icorrect password",
-            },
-            status=status.HTTP_400_BAD_REQUEST,
-        )
-
-
-@api_view(["POST"])
-def add_bill(request: Request, type: str):
-    serializer: Serializer = SERIALIZER_TYPES[type](data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(
-            {
-                "message": "Bill added successfully",
-            }
-        )
-    else:
-        return Response(
-            {
-                "message": f"Error {serializer.errors}",
             },
             status=status.HTTP_400_BAD_REQUEST,
         )

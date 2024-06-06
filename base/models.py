@@ -12,7 +12,7 @@ class Bill(models.Model):
     date = models.DateField()
     time = models.TimeField(default='11:11')
     provider = models.CharField(max_length=100, blank=False, null=False)
-    operation_number = models.CharField(max_length=100, blank=False, null=False)
+    operation_number = models.CharField(max_length=100, blank=False, null=False, unique=True)
     user = models.ForeignKey(User, to_field='id', on_delete=models.CASCADE)
 
     class Meta:
