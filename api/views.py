@@ -4,6 +4,8 @@ from rest_framework.decorators import api_view
 from rest_framework.serializers import Serializer
 from rest_framework import status
 from django.contrib.auth.hashers import check_password
+from django.shortcuts import get_object_or_404
+from django.http import Http404
 from api.serializers import (
     UserSerializer,
     ElectricBillSerializer,
@@ -36,10 +38,17 @@ def add_user(request: Request):
         )
 
 
+
 @api_view(["POST"])
 def update_user_info(request: Request):
 
-    user = User.objects.get(id=request.data.get("id"))
+    try:
+        user = get_object_or_404(User, id=request.data.get("id"))
+    except Http404:
+        return Response(
+            {"message": "User with the provided ID does not exist"},
+            status=status.HTTP_404_NOT_FOUND,
+        )
 
     serializer = UserSerializer(data=request.data, instance=user)
 
@@ -55,9 +64,7 @@ def update_user_info(request: Request):
         )
     else:
         return Response(
-            {
-                "message": str(serializer.errors),
-            },
+            {"message": str(serializer.errors)},
             status=status.HTTP_400_BAD_REQUEST,
         )
 
@@ -65,8 +72,8 @@ def update_user_info(request: Request):
 @api_view(["POST"])
 def login(request: Request):
     try:
-        user = User.objects.get(email=request.data["email"])
-    except User.DoesNotExist:
+        user = get_object_or_404(User, email=request.data["email"])
+    except Http404:
         return Response(
             {
                 "message": "Email not found",
